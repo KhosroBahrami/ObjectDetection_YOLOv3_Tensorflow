@@ -3,7 +3,7 @@
 
 A TensorFlow implementation of the YOLOv3 for object detection. 
 
-It has been originally published in this research [paper](https://arxiv.org/abs/1512.02325). 
+It has been originally published in this research [paper](https://arxiv.org/abs/1804.02767). 
 This repository contains a TensorFlow re-implementation of YOLOv3 which is inspired by the previous caffe 
 and tensorflow implementations. However, this code has clear pipelines for train, test and demo; 
 it is modular that can be extended or be use for new applications.
