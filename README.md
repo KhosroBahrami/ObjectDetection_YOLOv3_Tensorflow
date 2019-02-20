@@ -60,7 +60,7 @@ Demo uses the pretrained model that has been stored in /checkpoints/ssd_... .
 
 To run the demo, use the following command:
 ```python
-# Run demo of SSD for one image
+# Run demo of YOLOv3 for one image
 python3 yolo_v3_demo.py
 ```
 The demo module has the following 6 steps:
@@ -109,4 +109,4 @@ The Training module has the following 3 steps:
 
 
 
-# How SSD works?
+# How YOLOv3 works?
