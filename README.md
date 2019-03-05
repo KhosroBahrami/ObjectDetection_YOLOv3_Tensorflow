@@ -112,9 +112,6 @@ The Training module has the following 3 steps:
 # How YOLOv3 works?
 
 YOLO (You Only Look Once), is a network for object detection targeted for real-time processing. 
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://youtu.be/VOC3huqHrss)
-
-
 The object detection task consists in determining the location on the image where certain objects are present, as well as classifying those objects. Previous methods for this, like R-CNN and its variations, used a pipeline to perform this task in multiple steps. 
 
 
@@ -225,7 +222,13 @@ However, when we have classes like Person and Women in a dataset, then the above
 
 ### Non Maxmimum Supression (NMS)
 
+YOLO can make duplicate detections for the same object. To fix this, YOLO applies non-maximal suppression to remove duplications with lower confidence. Non-maximal suppression adds 2- 3% in mAP.
 
+Here is one of the possible non-maximal suppression implementation:
+
+Sort the predictions by the confidence scores.
+Start from the top scores, ignore any current prediction if we find any previous predictions that have the same class and IoU > 0.5 with the current prediction.
+Repeat step 2 until all predictions are checked.
 
 
 ### Prediction
