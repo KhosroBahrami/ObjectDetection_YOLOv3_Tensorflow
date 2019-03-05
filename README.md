@@ -110,16 +110,17 @@ The Training module has the following 3 steps:
 
 
 # How YOLOv3 works?
-YOLO stands for You Only Look Once. It's an object detector that uses features learned by a deep convolutional neural network to detect an object.
 
-The following table compares SSD, Faster RCNN and YOLO.
+YOLO (You Only Look Once), is a network for object detection. The object detection task consists in determining the location on the image where certain objects are present, as well as classifying those objects. Previous methods for this, like R-CNN and its variations, used a pipeline to perform this task in multiple steps. 
+
+
+The following table compares YOLOv1, YOLOv2 and YOLOv3.
 
 | Object Detection Method | VOC2007 test mAP |  Speed (FPS) | Number of Prior Boxes | Input Resolution |
 | :---: |   :---:     | :---: | :---: | :---: |
-| Faster R-CNN (VGG16) | 73.2% | 7 | 6000 | 1000*600 |
-| YOLOv1 (VGG16) | 63.4% | 45 |  98 | 448*448 |
-| SSD300 (VGG16) | 74.3% | 59 | 8732 | 300*300 |
-| SSD512 (VGG16) | 76.9% | 22 | 24564 | 512*512 |
+| YOLOv1 () | 63.4% | 45 |  98 | 448*448 |
+| YOLOv2 () |  |  |   |  |
+| YOLOv3 () |  |  |   |  |
 
 
 ### Backbone network & Feature maps
