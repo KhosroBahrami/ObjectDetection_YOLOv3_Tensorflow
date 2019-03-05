@@ -138,6 +138,8 @@ The newer architecture boasts of residual skip connections, and upsampling. The 
 
 The shape of the detection kernel is 1 x 1 x (B x (5 + C) ). Here B is the number of bounding boxes a cell on the feature map can predict, “5” is for the 4 bounding box attributes and one object confidence, and C is the number of classes. In YOLO v3 trained on COCO, B = 3 and C = 80, so the kernel size is 1 x 1 x 255. The feature map produced by this kernel has identical height and width of the previous feature map, and has detection attributes along the depth as described above.
 
+![Alt text](figs/image_grid.png?raw=true "Image Grid")
+
 
 I’d like to point out that stride of the network, or a layer is defined as the ratio by which it downsamples the input. In the following examples, I will assume we have an input image of size 416 x 416.
 
