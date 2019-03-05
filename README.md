@@ -110,8 +110,7 @@ The Training module has the following 3 steps:
 
 
 # How YOLOv3 works?
-
-
+YOLO stands for You Only Look Once. It's an object detector that uses features learned by a deep convolutional neural network to detect an object.
 
 The following table compares SSD, Faster RCNN and YOLO.
 
@@ -190,3 +189,7 @@ Note: YOLO uses k-means clustering on the training dataset to determine those de
 # Using backbone networks in SSD: 
 
 
+
+
+### References:
+https://www.kdnuggets.com/2018/05/implement-yolo-v3-object-detector-pytorch-part-1.html
