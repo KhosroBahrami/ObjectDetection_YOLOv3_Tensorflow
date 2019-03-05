@@ -110,3 +110,83 @@ The Training module has the following 3 steps:
 
 
 # How YOLOv3 works?
+
+
+
+The following table compares SSD, Faster RCNN and YOLO.
+
+| Object Detection Method | VOC2007 test mAP |  Speed (FPS) | Number of Prior Boxes | Input Resolution |
+| :---: |   :---:     | :---: | :---: | :---: |
+| Faster R-CNN (VGG16) | 73.2% | 7 | 6000 | 1000*600 |
+| YOLOv1 (VGG16) | 63.4% | 45 |  98 | 448*448 |
+| SSD300 (VGG16) | 74.3% | 59 | 8732 | 300*300 |
+| SSD512 (VGG16) | 76.9% | 22 | 24564 | 512*512 |
+
+
+### Backbone network & Feature maps
+
+
+
+
+
+### Prior boxes (Anchor points) 
+
+
+
+
+### Scales and Aspect Ratios of Prior Boxes
+
+
+
+
+Note: YOLO uses k-means clustering on the training dataset to determine those default boundary boxes.
+
+
+### Number of Prior Boxses: 
+
+
+
+
+
+
+
+
+
+### MultiBox Detection 
+
+
+
+
+### Hard Negative Mining
+
+
+
+
+### Matching Prior and Ground-truth bounding boxes
+
+
+
+
+### Image Augmentation
+
+
+
+
+### Loss function
+
+
+
+
+
+### Non Maxmimum Supression (NMS)
+
+
+
+
+### Prediction
+
+
+
+# Using backbone networks in SSD: 
+
+
