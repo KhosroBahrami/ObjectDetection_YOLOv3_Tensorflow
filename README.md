@@ -250,8 +250,6 @@ After removing the fully connected layers, YOLO can take images of different siz
 
 # YOLOv3
 
-----------------------------
-----------------------------
 
 ### Backbone network & Feature maps
 
