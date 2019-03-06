@@ -356,9 +356,13 @@ A new 53-layer Darknet-53 is used to replace the Darknet-19 as the feature extra
 
 ### References:
 [1] https://medium.com/@jonathan_hui/real-time-object-detection-with-yolo-yolov2-28b1b93e2088
+
 [2] https://datascience.stackexchange.com/questions/25119/how-to-calculate-map-for-detection-task-for-the-pascal-voc-challenge
+
 [3] https://towardsdatascience.com/yolo-v3-object-detection-53fb7d3bfe6b
+
 [4] https://www.kdnuggets.com/2018/05/implement-yolo-v3-object-detector-pytorch-part-1.html
+
 
 
 
