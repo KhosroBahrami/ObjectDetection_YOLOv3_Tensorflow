@@ -123,7 +123,73 @@ The following table compares YOLOv1, YOLOv2 and YOLOv3.
 | YOLOv3 () |  |  |   |  |
 
 
+
+
 # YOLOv1
+
+YOLO divides the input image into an S×S grid. Each grid cell predicts only one object. For example, the yellow grid cell below tries to predict the “person” object whose center (the blue dot) falls inside the grid cell.
+
+![Alt text](figs/fig1.png?raw=true "Each grid cell detects only one object.")
+
+Each grid cell predicts a fixed number of boundary boxes. In this example, the yellow grid cell makes two boundary box predictions (blue boxes) to locate where the person is.
+However, the one-object rule limits how close detected objects can be. For that, YOLO does have some limitations on how close objects can be.
+![Alt text](figs/fig2.png?raw=true "Each grid cell make a fixed number of boundary box guesses for the object.")
+
+For each grid cell,
+
+it predicts B boundary boxes and each box has one box confidence score,
+it detects one object only regardless of the number of boxes B,
+it predicts C conditional class probabilities (one per class for the likeliness of the object class).
+
+To evaluate PASCAL VOC, YOLO uses 7×7 grids (S×S), 2 boundary boxes (B) and 20 classes (C).
+
+
+Let’s get into more details. Each boundary box contains 5 elements: (x, y, w, h) and a box confidence score. The confidence score reflects how likely the box contains an object (objectness) and how accurate is the boundary box. We normalize the bounding box width w and height h by the image width and height. x and y are offsets to the corresponding cell. Hence, x, y, w and h are all between 0 and 1. Each cell has 20 conditional class probabilities. The conditional class probability is the probability that the detected object belongs to a particular class (one probability per category for each cell). So, YOLO’s prediction has a shape of (S, S, B×5 + C) = (7, 7, 2×5 + 20) = (7, 7, 30).
+
+![Alt text](figs/netv1.png?raw=true "YOLOv1 Network")[1]
+
+The major concept of YOLO is to build a CNN network to predict a (7, 7, 30) tensor. It uses a CNN network to reduce the spatial dimension to 7×7 with 1024 output channels at each location. YOLO performs a linear regression using two fully connected layers to make 7×7×2 boundary box predictions (the middle picture below). To make a final prediction, we keep those with high box confidence scores (greater than 0.25) as our final predictions (the right picture).
+
+![Alt text](figs/ev1.png?raw=true "example")[1]
+
+YOLO has 24 convolutional layers followed by 2 fully connected layers (FC). Some convolution layers use 1 × 1 reduction layers alternatively to reduce the depth of the features maps. For the last convolution layer, it outputs a tensor with shape (7, 7, 1024). The tensor is then flattened. Using 2 fully connected layers as a form of linear regression, it outputs 7×7×30 parameters and then reshapes to (7, 7, 30), i.e. 2 boundary box predictions per location.
+
+A faster but less accurate version of YOLO, called Fast YOLO, uses only 9 convolutional layers with shallower feature maps.
+
+
+### Loss function
+
+YOLO predicts multiple bounding boxes per grid cell. To compute the loss for the true positive, we only want one of them to be responsible for the object. For this purpose, we select the one with the highest IoU (intersection over union) with the ground truth. This strategy leads to specialization among the bounding box predictions. Each prediction gets better at predicting certain sizes and aspect ratios.
+
+YOLO uses sum-squared error between the predictions and the ground truth to calculate loss. The loss function composes of:
+
+the classification loss.
+the localization loss (errors between the predicted boundary box and the ground truth).
+the confidence loss (the objectness of the box).
+
+
+The final loss adds localization, confidence and classification losses together, as
+![Alt text](figs/loss.png?raw=true "Loss function")
+
+
+
+### Non Maxmimum Supression (NMS)
+
+YOLO can make duplicate detections for the same object. To fix this, YOLO applies non-maximal suppression to remove duplications with lower confidence. Non-maximal suppression adds 2- 3% in mAP.
+
+Here is one of the possible non-maximal suppression implementation:
+
+Sort the predictions by the confidence scores.
+Start from the top scores, ignore any current prediction if we find any previous predictions that have the same class and IoU > 0.5 with the current prediction.
+Repeat step 2 until all predictions are checked.
+
+
+----------------------------
+----------------------------
+----------------------------
+
+
+
 
 ### Backbone network & Feature maps
 
@@ -169,35 +235,6 @@ On the other hand YOLO v3 predicts boxes at 3 different scales. For the same ima
 
 
 
-### Scales and Aspect Ratios of Prior Boxes
-
-
-
-### Number of Prior Boxses: 
-
-
-
-
-### MultiBox Detection 
-
-
-
-
-### Hard Negative Mining
-
-
-
-
-### Matching Prior and Ground-truth bounding boxes
-
-
-
-
-### Image Augmentation
-
-
-
-
 ### Loss function
 
 YOLO v2’s loss function looked like this.
@@ -220,34 +257,98 @@ Softmaxing classes rests on the assumption that classes are mutually exclusive, 
 However, when we have classes like Person and Women in a dataset, then the above assumption fails. This is the reason why the authors of YOLO have refrained from softmaxing the classes. Instead, each class score is predicted using logistic regression and a threshold is used to predict multiple labels for an object. Classes with scores higher than this threshold are assigned to the box.
 
 
-
-### Non Maxmimum Supression (NMS)
-
-YOLO can make duplicate detections for the same object. To fix this, YOLO applies non-maximal suppression to remove duplications with lower confidence. Non-maximal suppression adds 2- 3% in mAP.
-
-Here is one of the possible non-maximal suppression implementation:
-
-Sort the predictions by the confidence scores.
-Start from the top scores, ignore any current prediction if we find any previous predictions that have the same class and IoU > 0.5 with the current prediction.
-Repeat step 2 until all predictions are checked.
-
-
-### Prediction
-
-
-
+-----------------------------
+-----------------------------
 
 
 # YOLOv2
 
-### ...
+### Batch normalization
 
+Add batch normalization in convolution layers. This removes the need for dropouts and pushes mAP up 2%.
+
+### High-resolution classifier
+
+The YOLO training composes of 2 phases. First, we train a classifier network like VGG16. Then we replace the fully connected layers with a convolution layer and retrain it end-to-end for the object detection. YOLO trains the classifier with 224 × 224 pictures followed by 448 × 448 pictures for the object detection. YOLOv2 starts with 224 × 224 pictures for the classifier training but then retune the classifier again with 448 × 448 pictures using much fewer epochs. This makes the detector training easier and moves mAP up by 4%.
+
+### Convolutional with Anchor Boxes
+As indicated in the YOLO paper, the early training is susceptible to unstable gradients. Initially, YOLO makes arbitrary guesses on the boundary boxes. These guesses may work well for some objects but badly for others resulting in steep gradient changes. In early training, predictions are fighting with each other on what shapes to specialize on.
+
+In the real-life domain, the boundary boxes are not arbitrary. Cars have very similar shapes and pedestrians have an approximate aspect ratio of 0.41. Since we only need one guess to be right, the initial training will be more stable if we start with diverse guesses that are common for real-life objects. For example, we can create 5 anchor boxes with the following shapes.
+![Alt text](figs/5anchors.png?raw=true "5 anchor boxes")
+Instead of predicting 5 arbitrary boundary boxes, we predict offsets to each of the anchor boxes above. If we constrain the offset values, we can maintain the diversity of the predictions and have each prediction focuses on a specific shape. So the initial training will be more stable.
+
+
+
+### Backbone network & Feature maps
+Here are the changes we make to the network:
+
+![Alt text](figs/networkv2.png?raw=true "network of v2")
+
+Remove the fully connected layers responsible for predicting the boundary box.
+
+We move the class prediction from the cell level to the boundary box level. Now, each prediction includes 4 parameters for the boundary box, 1 box confidence score (objectness) and 20 class probabilities. i.e. 5 boundary boxes with 25 parameters: 125 parameters per grid cell. Same as YOLO, the objectness prediction still predicts the IOU of the ground truth and the proposed box.
+
+
+To generate predictions with a shape of 7 × 7 × 125, we replace the last convolution layer with three 3 × 3 convolutional layers each outputting 1024 output channels. Then we apply a final 1 × 1 convolutional layer to convert the 7 × 7 × 1024 output into 7 × 7 × 125. (See the section on DarkNet for the details.)
+
+Change the input image size from 448 × 448 to 416 × 416. This creates an odd number spatial dimension (7×7 v.s. 8×8 grid cell). The center of a picture is often occupied by a large object. With an odd number grid cell, it is more certain on where the object belongs.
+
+Remove one pooling layer to make the spatial output of the network to 13×13 (instead of 7×7).
+
+Anchor boxes decrease mAP slightly from 69.5 to 69.2 but the recall improves from 81% to 88%. i.e. even the accuracy is slightly decreased but it increases the chances of detecting all the ground truth objects.
+
+
+### Dimension Clusters
+
+In many problem domains, the boundary boxes have strong patterns. For example, in the autonomous driving, the 2 most common boundary boxes will be cars and pedestrians at different distances. To identify the top-K boundary boxes that have the best coverage for the training data, we run K-means clustering on the training data to locate the centroids of the top-K clusters.
+
+
+### Direct location prediction
+
+We make predictions on the offsets to the anchors. Nevertheless, if it is unconstrained, our guesses will be randomized again. YOLO predicts 5 parameters (tx, ty, tw, th, and to) and applies the sigma function to constraint its possible offset range.
+Here is the visualization. The blue box below is the predicted boundary box and the dotted rectangle is the anchor.
+![Alt text](figs/prediction.png?raw=true "prediction")
+
+### Fine-Grained Features
+Convolution layers decrease the spatial dimension gradually. As the corresponding resolution decreases, it is harder to detect small objects. Other object detectors like SSD locate objects from different layers of feature maps. So each layer specializes at a different scale. YOLO adopts a different approach called passthrough. It reshapes the 28 × 28 × 512 layer to 14 × 14 × 2048. Then it concatenates with the original 14 × 14 ×1024 output layer. Now we apply convolution filters on the new 14 × 14 × 3072 layer to make predictions.
+
+### Multi-Scale Training
+After removing the fully connected layers, YOLO can take images of different sizes. If the width and height are doubled, we are just making 4x output grid cells and therefore 4x predictions. Since the YOLO network downsamples the input by 32, we just need to make sure the width and height is a multiple of 32. During training, YOLO takes images of size 320×320, 352×352, … and 608×608 (with a step of 32). For every 10 batches, YOLOv2 randomly selects another image size to train the model. This acts as data augmentation and forces the network to predict well for different input image dimension and scale. In additional, we can use lower resolution images for object detection at the cost of accuracy. This can be a good tradeoff for speed on low GPU power devices. At 288 × 288 YOLO runs at more than 90 FPS with mAP almost as good as Fast R-CNN. At high-resolution YOLO achieves 78.6 mAP on VOC 2007.
 
 
 
 # YOLOv3
 
-### ...
+### Class Prediction
+
+Most classifiers assume output labels are mutually exclusive. It is true if the output are mutually exclusive object classes. Therefore, YOLO applies a softmax function to convert scores into probabilities that sum up to one. YOLOv3 uses multi-label classification. For example, the output labels may be “pedestrian” and “child” which are not non-exclusive. (the sum of output can be greater than 1 now.) YOLOv3 replaces the softmax function with independent logistic classifiers to calculate the likeliness of the input belongs to a specific label. Instead of using mean square error in calculating the classification loss, YOLOv3 uses binary cross-entropy loss for each label. This also reduces the computation complexity by avoiding the softmax function.
+
+### Bounding box prediction & cost function calculation
+YOLOv3 predicts an objectness score for each bounding box using logistic regression. YOLOv3 changes the way in calculating the cost function. If the bounding box prior (anchor) overlaps a ground truth object more than others, the corresponding objectness score should be 1. For other priors with overlap greater than a predefined threshold (default 0.5), they incur no cost. Each ground truth object is associated with one boundary box prior only. If a bounding box prior is not assigned, it incurs no classification and localization lost, just confidence loss on objectness. We use tx and ty (instead of bx and by) to compute the loss.
+![Alt text](figs/lossv3.png?raw=true "")
+
+
+### Feature Pyramid Networks (FPN) like Feature Pyramid
+
+YOLOv3 makes 3 predictions per location. Each prediction composes of a boundary box, a objectness and 80 class scores, i.e. N × N × [3 × (4 + 1 + 80) ] predictions.
+
+YOLOv3 makes predictions at 3 different scales (similar to the FPN):
+
+In the last feature map layer.
+Then it goes back 2 layers back and upsamples it by 2. YOLOv3 then takes a feature map with higher resolution and merge it with the upsampled feature map using element-wise addition. YOLOv3 apply convolutional filters on the merged map to make the second set of predictions.
+Repeat 2 again so the resulted feature map layer has good high-level structure (semantic) information and good resolution spatial information on object locations.
+To determine the priors, YOLOv3 applies k-means cluster. Then it pre-select 9 clusters. For COCO, the width and height of the anchors are (10×13),(16×30),(33×23),(30×61),(62×45),(59× 119),(116 × 90),(156 × 198),(373 × 326). These 9 priors are grouped into 3 different groups according to their scale. Each group is assigned to a specific feature map above in detecting objects.
+
+
+### Feature extractor
+A new 53-layer Darknet-53 is used to replace the Darknet-19 as the feature extractor. Darknet-53 mainly compose of 3 × 3 and 1× 1 filters with skip connections like the residual network in ResNet. Darknet-53 has less BFLOP (billion floating point operations) than ResNet-152, but achieves the same classification accuracy at 2x faster.
+
+![Alt text](figs/darknet53.png?raw=true "darknet53")
+
+
+
+
 
 
 
