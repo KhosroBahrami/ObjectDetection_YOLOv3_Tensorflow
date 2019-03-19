@@ -112,7 +112,7 @@ The Training module has the following 3 steps:
 # How YOLOv1, YOLOv2, and YOLOv3 work?
 
 YOLO (You Only Look Once), is a network for object detection targeted for real-time processing. 
-The object detection task consists in determining the location on the image where certain objects are present, as well as classifying those objects. It's first version was YOLOv1 and after some improvements, finally the last one propoased as YOLOv3.
+The object detection is the task of determining the location of certain objects, as well as classifying those objects. It's first version was YOLOv1 and after some improvements, finally the last one proposed as YOLOv3.
 
 The following table compares YOLOv1, YOLOv2 and YOLOv3.
 
