@@ -181,10 +181,11 @@ Due to multiple anchorbozeds, YOLO can make duplicate detections for the same ob
 ----------------------------
 
 # YOLOv2
+YOLOv2 is the second version of YOLO and has some contributions and improvments. 
 
 ### Batch normalization
 
-Add batch normalization in convolution layers. This removes the need for dropouts and pushes mAP up 2%.
+YOLOv2 has batch normalization in convolution layers. This removes the need for dropouts and pushes mAP up 2%.
 
 ### High-resolution classifier
 
