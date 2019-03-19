@@ -160,11 +160,9 @@ A faster but less accurate version of YOLO, called Fast YOLO, uses only 9 convol
 YOLO predicts multiple bounding boxes per grid cell. To compute the loss for the true positive, we only want one of them to be responsible for the object. For this purpose, we select the one with the highest IoU (intersection over union) with the ground truth. This strategy leads to specialization among the bounding box predictions. Each prediction gets better at predicting certain sizes and aspect ratios.
 
 YOLO uses sum-squared error between the predictions and the ground truth to calculate loss. The loss function composes of:
-
-the classification loss.
-the localization loss (errors between the predicted boundary box and the ground truth).
-the confidence loss (the objectness of the box).
-
+- the classification loss.
+- the localization loss (errors between the predicted boundary box and the ground truth).
+- the confidence loss (the objectness of the box).
 
 The final loss adds localization, confidence and classification losses together, as
 ![Alt text](figs/loss.png?raw=true "Loss function")
@@ -173,13 +171,10 @@ The final loss adds localization, confidence and classification losses together,
 
 ### Non Maxmimum Supression (NMS)
 
-YOLO can make duplicate detections for the same object. To fix this, YOLO applies non-maximal suppression to remove duplications with lower confidence. Non-maximal suppression adds 2- 3% in mAP.
-
-Here is one of the possible non-maximal suppression implementation:
-
-Sort the predictions by the confidence scores.
-Start from the top scores, ignore any current prediction if we find any previous predictions that have the same class and IoU > 0.5 with the current prediction.
-Repeat step 2 until all predictions are checked.
+Due to multiple anchorbozeds, YOLO can make duplicate detections for the same object. To remove duplications with lower confidence, YOLO applies non-maximal suppression, as follow: 
+- Sort the predictions by the confidence scores.
+- Start from the top scores, ignore any current prediction if we find any previous predictions that have the same class and IoU > 0.5 with the current prediction.
+- Repeat step 2 until all predictions are checked.
 
 
 
