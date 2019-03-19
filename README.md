@@ -44,7 +44,7 @@ $ wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
 $ tar -xvf VOCtrainval_11-May-2012.tar
 $ tar -xvf VOCtrainval_06-Nov-2007.tar
 $ tar -xvf VOCtest_06-Nov-2007.tar
-$ python3 ssd_image_to_tf.py
+$ python3 convert_weight.py
 ```
 The resulted tf records will be stored into tfrecords_test and tfrecords_train folders.
 
@@ -56,7 +56,7 @@ Before running the code, you need to touch the configuration based on your needs
 
 
 ## Demo of YOLOv3
-Demo uses the pretrained model that has been stored in /checkpoints/ssd_... .
+Demo uses the pretrained model that has been stored in /checkpoints/yolov3... .
 
 To run the demo, use the following command:
 ```python
@@ -73,7 +73,7 @@ The demo module has the following 6 steps:
 
 
 ## Evaluating (Testing) YOLOv3 
-Test module uses the pretrained model that has been stored in /checkpoints/ssd_... . 
+Test module uses the pretrained model that has been stored in /checkpoints/yolov3... . 
 
 To test the YOLOv3, use the following command:
 ```python
