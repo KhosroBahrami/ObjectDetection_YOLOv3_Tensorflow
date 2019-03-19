@@ -136,10 +136,9 @@ However, the one-object rule limits how close detected objects can be. For that,
 ![Alt text](figs/fig2.png?raw=true "Each grid cell make a fixed number of boundary box guesses for the object.")
 
 For each grid cell,
-
-it predicts B boundary boxes and each box has one box confidence score,
-it detects one object only regardless of the number of boxes B,
-it predicts C conditional class probabilities (one per class for the likeliness of the object class).
+- it predicts B boundary boxes and each box has one box confidence score,
+- it detects one object only regardless of the number of boxes B,
+- it predicts C conditional class probabilities (one per class for the likeliness of the object class).
 
 To evaluate PASCAL VOC, YOLO uses 7×7 grids (S×S), 2 boundary boxes (B) and 20 classes (C).
 
