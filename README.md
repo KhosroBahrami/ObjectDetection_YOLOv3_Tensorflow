@@ -127,7 +127,7 @@ The following table compares YOLOv1, YOLOv2 and YOLOv3.
 
 # YOLOv1
 
-YOLO divides the input image into an S×S grid. Each grid cell predicts only one object. For example, the yellow grid cell below tries to predict the “person” object whose center (the blue dot) falls inside the grid cell.
+YOLO divides the input image into an S×S grid. Each grid cell predicts only one object. For example, the yellow grid cell in the folowing figure tries to predict the person object whose center (the blue dot) falls inside the yellow grid cell.
 
 ![Alt text](figs/fig1.png?raw=true "Each grid cell detects only one object.")
 
