@@ -1,7 +1,7 @@
 # YOLOv3 Object Detector based on Tensorflow
 
 
-A TensorFlow implementation of the YOLOv3 for object detection. 
+A TensorFlow implementation of YOLOv3 for object detection. 
 
 It has been originally published in this research [paper](https://arxiv.org/abs/1804.02767). 
 This repository contains a TensorFlow re-implementation of YOLOv3 which is inspired by the previous caffe 
