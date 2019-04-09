@@ -181,7 +181,7 @@ Due to multiple anchors, YOLO can make duplicate detections for the same object.
 ----------------------------
 
 # YOLOv2
-YOLOv2 is the second version of YOLO and has some contributions and improvments. 
+YOLOv2 is the second version of YOLO and has some contributions and improvements. 
 
 ### Batch normalization
 
