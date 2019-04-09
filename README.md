@@ -30,7 +30,7 @@ pip install opencv-python
 
 ## Datasets
 For training & testing, I used Pascal datasets. 
-To prapare tha datasets:
+To prepare the datasets:
 1. Download VOC2007 and VOC2012 datasets. I assume the data is stored in /datasets/
 ```
 $ cd datasets
