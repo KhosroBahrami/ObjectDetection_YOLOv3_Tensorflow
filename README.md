@@ -171,7 +171,7 @@ The final loss adds localization, confidence and classification losses together,
 
 ### Non Maxmimum Supression (NMS)
 
-Due to multiple anchorbozeds, YOLO can make duplicate detections for the same object. To remove duplications with lower confidence, YOLO applies non-maximal suppression, as follow: 
+Due to multiple anchors, YOLO can make duplicate detections for the same object. To remove duplications with lower confidence, YOLO applies non-maximal suppression, as follow: 
 - Sort the predictions by the confidence scores.
 - Start from the top scores, ignore any current prediction if we find any previous predictions that have the same class and IoU > 0.5 with the current prediction.
 - Repeat step 2 until all predictions are checked.
