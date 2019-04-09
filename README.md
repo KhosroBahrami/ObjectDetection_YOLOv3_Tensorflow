@@ -119,8 +119,8 @@ The following table compares YOLOv1, YOLOv2 and YOLOv3.
 | Object Detection Method | VOC2007 test mAP |  Speed (FPS) | Number of Prior Boxes | Input Resolution |
 | :---: |   :---:     | :---: | :---: | :---: |
 | YOLOv1 (19  layers) | 63.4% | 45 |  98 | 448*448 |
-| YOLOv2 (30  layers) |  |  |   | 416*416 |
-| YOLOv3 (106 layers) |  |  |   |  |
+| YOLOv2 (30  layers) |  |  | 845  | 416*416 |
+| YOLOv3 (106 layers) |  |  |  10,647 | 416*416 |
 
 
 
